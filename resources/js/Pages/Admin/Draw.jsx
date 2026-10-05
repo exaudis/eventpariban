@@ -226,10 +226,10 @@ export default function Draw({ prizes, eligibleCount, candidateNumbers }) {
                         {drawingState === 'idle' && (
                             <button
                                 onClick={startDraw}
-                                disabled={eligibleCount === 0}
+                                disabled={eligibleCount === 0 || prizes.length === 0}
                                 className="py-3.5 px-8 bg-primary hover:bg-primary-hover text-surface text-base font-bold rounded-xl shadow-sm transition-colors uppercase tracking-wider disabled:opacity-50"
                             >
-                                MULAI PENGUNDIAN
+                                {prizes.length === 0 ? 'TIDAK ADA HADIAH TERSEDIA' : 'MULAI PENGUNDIAN'}
                             </button>
                         )}
 

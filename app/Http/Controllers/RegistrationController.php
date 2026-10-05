@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DoorprizeNumber;
 use App\Models\Participant;
 use App\Models\Table;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class RegistrationController extends Controller
 {
+    public function landing(Request $request): Response
+    {
+        $tableNumber = $request->query('table', '01');
+        return Inertia::render('Public/Landing', ['tableNumber' => $tableNumber]);
+    }
+
     /**
      * Show registration form page.
      */
@@ -29,14 +34,8 @@ class RegistrationController extends Controller
             $table = Table::first();
         }
 
-        $availableCount = DoorprizeNumber::where('status', 'available')->count();
-        $isClosed = ($availableCount === 0);
-
         return Inertia::render('Public/Register', [
             'tableNumber' => $table ? $table->table_number : '01',
-            'tableId' => $table ? $table->id : 1,
-            'isClosed' => $isClosed,
-            'availableCount' => $availableCount,
         ]);
     }
 
@@ -48,12 +47,17 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'age' => ['required', 'integer', 'min:1', 'max:120'],
             'table_number' => ['required', 'string'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
+            'age.required' => 'Umur wajib diisi.',
+            'age.integer' => 'Umur harus berupa angka.',
+            'age.min' => 'Umur tidak valid.',
         ]);
 
         // Clean phone number format
@@ -62,16 +66,8 @@ class RegistrationController extends Controller
             $cleanPhone = '0' . substr($cleanPhone, 2);
         }
 
-        // Rule 7 & 24: 1 WhatsApp = 1 participant = 1 doorprize number
-        // Check if phone already registered
-        $existing = Participant::where('phone', $cleanPhone)->first();
-        if ($existing) {
-            return redirect()->route('registration.success')->with('participant_result', [
-                'name' => $existing->name,
-                'phone' => $existing->phone,
-                'doorprize_number' => $existing->doorprize_number,
-                'already_registered' => true,
-            ]);
+        if (Participant::where('phone', $cleanPhone)->exists()) {
+            return back()->withErrors(['phone' => 'Nomor WhatsApp ini sudah terdaftar dan tidak dapat digunakan kembali.']);
         }
 
         $formattedTableNumber = str_pad((string)$validated['table_number'], 2, '0', STR_PAD_LEFT);
@@ -82,52 +78,65 @@ class RegistrationController extends Controller
         $tableId = $table ? $table->id : 1;
 
         try {
-            $result = DB::transaction(function () use ($validated, $cleanPhone, $tableId) {
-                // Lock row to prevent concurrent assignment race condition
-                $numberRecord = DoorprizeNumber::where('status', 'available')
-                    ->lockForUpdate()
-                    ->inRandomOrder()
-                    ->first();
-
-                if (!$numberRecord) {
-                    return null;
-                }
-
-                $participant = Participant::create([
+            $result = Participant::create([
+                    'payment_token' => (string) Str::uuid(),
                     'name' => trim($validated['name']),
                     'phone' => $cleanPhone,
-                    'email' => $validated['email'] ? trim($validated['email']) : null,
+                    'email' => trim($validated['email']),
+                    'age' => (int)$validated['age'],
                     'table_id' => $tableId,
-                    'doorprize_number' => $numberRecord->number,
+                    'doorprize_number' => null,
                     'registered_at' => now(),
                 ]);
-
-                $numberRecord->update([
-                    'status' => 'used',
-                    'assigned_to' => $participant->id,
-                    'assigned_at' => now(),
-                ]);
-
-                return $participant;
-            });
-
-            if (!$result) {
-                return back()->withErrors([
-                    'phone' => 'Registrasi Doorprize Telah Ditutup. Seluruh nomor doorprize telah terpakai.'
-                ]);
-            }
-
-            return redirect()->route('registration.success')->with('participant_result', [
-                'name' => $result->name,
-                'phone' => $result->phone,
-                'doorprize_number' => $result->doorprize_number,
-                'already_registered' => false,
-            ]);
+            return redirect()->route('payment.show', $result->payment_token);
         } catch (\Exception $e) {
+            if (Participant::where('phone', $cleanPhone)->exists()) {
+                return back()->withErrors(['phone' => 'Nomor WhatsApp ini sudah terdaftar dan tidak dapat digunakan kembali.']);
+            }
             return back()->withErrors([
                 'phone' => 'Terjadi kesalahan sistem. Silakan coba beberapa saat lagi.'
             ]);
         }
+    }
+
+    public function payment(string $token): Response|RedirectResponse
+    {
+        $participant = Participant::where('payment_token', $token)->firstOrFail();
+        return Inertia::render('Public/Payment', [
+            'participant' => [
+                'name' => $participant->name,
+                'payment_method' => $participant->payment_method,
+                'payment_status' => $participant->payment_status,
+                'doorprize_number' => $participant->doorprize_number,
+            ],
+        ]);
+    }
+
+    public function submitPayment(Request $request, string $token): RedirectResponse
+    {
+        $participant = Participant::where('payment_token', $token)->firstOrFail();
+        if (!in_array($participant->payment_status, ['awaiting_payment', 'rejected'], true)) {
+            return back()->withErrors(['payment' => 'Pilihan pembayaran sudah dikirim dan sedang diproses.']);
+        }
+
+        $validated = $request->validate([
+            'payment_method' => ['required', 'in:qris,onsite'],
+            'payment_proof' => ['required_if:payment_method,qris', 'nullable', 'image', 'max:2048'],
+        ], [
+            'payment_proof.required_if' => 'Unggah bukti pembayaran QRIS.',
+            'payment_proof.image' => 'Bukti pembayaran harus berupa gambar.',
+            'payment_proof.max' => 'Ukuran bukti pembayaran maksimal 2 MB.',
+        ]);
+
+        $proofFile = $validated['payment_method'] === 'qris' ? $request->file('payment_proof') : null;
+        $participant->update([
+            'payment_method' => $validated['payment_method'],
+            'payment_status' => 'pending',
+            'payment_proof_data' => $proofFile ? base64_encode($proofFile->get()) : null,
+            'payment_proof_mime' => $proofFile?->getMimeType(),
+        ]);
+
+        return redirect()->route('payment.show', $token);
     }
 
     /**

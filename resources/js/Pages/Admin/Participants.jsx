@@ -23,7 +23,7 @@ export default function Participants({ participants, filters, tables }) {
                             type="text"
                             name="search"
                             defaultValue={filters.search}
-                            placeholder="Cari nama atau nomor WhatsApp..."
+                            placeholder="Cari nama, email, atau nomor WhatsApp..."
                             className="w-full px-3.5 py-2 bg-surface border border-eventborder rounded-lg text-sm text-bodytext focus:ring-1 focus:ring-primary focus:border-primary"
                         />
                     </div>
@@ -68,6 +68,7 @@ export default function Participants({ participants, filters, tables }) {
                                 <th className="py-2.5 px-4">Nama</th>
                                 <th className="py-2.5 px-4">No. WhatsApp</th>
                                 <th className="py-2.5 px-4">Email</th>
+                                <th className="py-2.5 px-4 text-center">Umur</th>
                                 <th className="py-2.5 px-4 text-center">Meja</th>
                                 <th className="py-2.5 px-4 text-center">Nomor Doorprize</th>
                                 <th className="py-2.5 px-4 text-right">Waktu Registrasi</th>
@@ -76,7 +77,7 @@ export default function Participants({ participants, filters, tables }) {
                         <tbody className="divide-y divide-eventborder">
                             {participants.data.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" className="py-8 text-center text-secondary text-sm">
+                                    <td colSpan="8" className="py-8 text-center text-secondary text-sm">
                                         Data peserta tidak ditemukan.
                                     </td>
                                 </tr>
@@ -89,6 +90,7 @@ export default function Participants({ participants, filters, tables }) {
                                         <td className="py-3 px-4 font-semibold text-dark">{item.name}</td>
                                         <td className="py-3 px-4 font-mono text-xs">{item.phone}</td>
                                         <td className="py-3 px-4 text-secondary text-xs">{item.email}</td>
+                                        <td className="py-3 px-4 text-center font-medium text-dark">{item.age} Thn</td>
                                         <td className="py-3 px-4 text-center">
                                             <span className="inline-block px-2 py-0.5 bg-eventbg border border-eventborder rounded text-xs font-medium">
                                                 Meja {item.table}

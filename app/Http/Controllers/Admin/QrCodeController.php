@@ -18,7 +18,7 @@ class QrCodeController extends Controller
         $baseUrl = config('app.url', 'http://localhost:8000');
 
         $tables = Table::orderBy('table_number')->get()->map(function ($t) use ($baseUrl) {
-            $registerUrl = "{$baseUrl}/register?table={$t->table_number}";
+            $registerUrl = "{$baseUrl}/?table={$t->table_number}";
 
             $renderer = new ImageRenderer(
                 new RendererStyle(200, 1),

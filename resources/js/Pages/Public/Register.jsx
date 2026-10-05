@@ -1,11 +1,12 @@
 import React from 'react';
 import { useForm, Head } from '@inertiajs/react';
 
-export default function Register({ tableNumber, isClosed, availableCount }) {
+export default function Register({ tableNumber }) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         phone: '',
         email: '',
+        age: '',
         table_number: tableNumber || '01',
     });
 
@@ -32,9 +33,7 @@ export default function Register({ tableNumber, isClosed, availableCount }) {
                     <h1 className="text-2xl font-bold text-dark tracking-tight">
                         Registrasi Doorprize
                     </h1>
-                    <p className="text-sm text-secondary mt-1">
-                        Isi data berikut untuk mendapatkan nomor doorprize.
-                    </p>
+                    <p className="text-sm text-secondary mt-1">Isi data diri untuk melanjutkan pembayaran HTM Rp35.000.</p>
 
                     {/* Table Badge */}
                     <div className="mt-4 inline-flex items-center gap-1.5 px-4 py-1.5 bg-eventbg border border-eventborder rounded-full text-sm font-medium text-dark">
@@ -43,21 +42,8 @@ export default function Register({ tableNumber, isClosed, availableCount }) {
                     </div>
                 </div>
 
-                {/* Form or Closed State */}
-                {isClosed ? (
-                    <div className="text-center py-6">
-                        <div className="w-12 h-12 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-3 font-bold text-lg">
-                            !
-                        </div>
-                        <h2 className="text-lg font-bold text-dark mb-1">
-                            Registrasi Doorprize Telah Ditutup
-                        </h2>
-                        <p className="text-sm text-secondary">
-                            Seluruh nomor doorprize telah terpakai.
-                        </p>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Data tersimpan lebih dulu; nomor undian baru diberikan setelah lunas. */}
+                <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Nama Lengkap */}
                         <div>
                             <label className="block text-sm font-medium text-dark mb-1">
@@ -94,20 +80,41 @@ export default function Register({ tableNumber, isClosed, availableCount }) {
                             )}
                         </div>
 
-                        {/* Email Optional */}
+                        {/* Email */}
                         <div>
                             <label className="block text-sm font-medium text-dark mb-1">
-                                Email <span className="text-xs text-secondary font-normal">(Opsional)</span>
+                                Email <span className="text-error">*</span>
                             </label>
                             <input
                                 type="email"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
                                 placeholder="nama@email.com"
+                                required
                                 className="w-full px-3.5 py-2.5 bg-surface border border-eventborder rounded-lg text-bodytext focus:ring-1 focus:ring-primary focus:border-primary text-sm transition-colors"
                             />
                             {errors.email && (
                                 <p className="text-xs text-error mt-1">{errors.email}</p>
+                            )}
+                        </div>
+
+                        {/* Umur */}
+                        <div>
+                            <label className="block text-sm font-medium text-dark mb-1">
+                                Umur <span className="text-error">*</span>
+                            </label>
+                            <input
+                                type="number"
+                                min="1"
+                                max="120"
+                                value={data.age}
+                                onChange={(e) => setData('age', e.target.value)}
+                                placeholder="Contoh: 25"
+                                required
+                                className="w-full px-3.5 py-2.5 bg-surface border border-eventborder rounded-lg text-bodytext focus:ring-1 focus:ring-primary focus:border-primary text-sm transition-colors"
+                            />
+                            {errors.age && (
+                                <p className="text-xs text-error mt-1">{errors.age}</p>
                             )}
                         </div>
 
@@ -118,11 +125,10 @@ export default function Register({ tableNumber, isClosed, availableCount }) {
                                 disabled={processing}
                                 className="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-surface text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-60 uppercase tracking-wide"
                             >
-                                {processing ? 'Memproses...' : 'DAFTAR & DAPATKAN NOMOR'}
+                                {processing ? 'Memproses...' : 'LANJUT KE PEMBAYARAN'}
                             </button>
                         </div>
-                    </form>
-                )}
+                </form>
 
                 {/* Footer disclaimer */}
                 <div className="mt-6 pt-4 border-t border-eventborder text-center">

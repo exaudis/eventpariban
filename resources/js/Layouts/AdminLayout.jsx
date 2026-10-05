@@ -7,6 +7,9 @@ export default function AdminLayout({ children, title }) {
     const navItems = [
         { name: 'Dashboard', href: '/admin/dashboard', active: url.startsWith('/admin/dashboard') },
         { name: 'Peserta', href: '/admin/participants', active: url.startsWith('/admin/participants') },
+        { name: 'Pembayaran', href: '/admin/payments', active: url.startsWith('/admin/payments') },
+        { name: 'Hadiah', href: '/admin/prizes', active: url.startsWith('/admin/prizes') },
+        { name: 'Nomor Undian', href: '/admin/numbers', active: url.startsWith('/admin/numbers') },
         { name: 'Pengundian', href: '/admin/draw', active: url.startsWith('/admin/draw') },
         { name: 'Pemenang', href: '/admin/winners', active: url.startsWith('/admin/winners') },
         { name: 'QR Codes', href: '/admin/qrcodes', active: url.startsWith('/admin/qrcodes') },

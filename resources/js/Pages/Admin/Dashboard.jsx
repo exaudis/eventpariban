@@ -9,7 +9,7 @@ export default function Dashboard({ stats, recentRegistrations }) {
 
             {/* Stats Summary Bar */}
             <div className="bg-surface border border-eventborder rounded-xl p-6 mb-8">
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 divide-y lg:divide-y-0 lg:divide-x divide-eventborder">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 divide-y lg:divide-y-0 lg:divide-x divide-eventborder">
                     <div className="pt-2 lg:pt-0 lg:px-4 first:px-0">
                         <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
                             Total Peserta
@@ -44,6 +44,10 @@ export default function Dashboard({ stats, recentRegistrations }) {
                         <div className="text-3xl font-extrabold text-dark mt-1">
                             {stats.totalWinners}
                         </div>
+                    </div>
+                    <div className="pt-4 lg:pt-0 lg:px-4">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-secondary">Belum Lunas</span>
+                        <div className="text-3xl font-extrabold text-amber-600 mt-1">{stats.pendingPayments}</div>
                     </div>
                 </div>
             </div>
@@ -82,7 +86,7 @@ export default function Dashboard({ stats, recentRegistrations }) {
                                             </span>
                                         </td>
                                         <td className="py-3 px-4 text-center font-mono font-bold text-primary text-base">
-                                            {item.number}
+                                            {item.number || (item.payment_status === 'paid' ? '—' : 'Belum lunas')}
                                         </td>
                                         <td className="py-3 px-4 text-right text-secondary text-xs">{item.time}</td>
                                     </tr>

@@ -12,13 +12,24 @@ class Participant extends Model
         'name',
         'phone',
         'email',
+        'age',
         'table_id',
         'doorprize_number',
         'registered_at',
+        'payment_token',
+        'payment_method',
+        'payment_status',
+        'payment_amount',
+        'payment_proof_data',
+        'payment_proof_mime',
+        'paid_at',
     ];
 
     protected $casts = [
         'registered_at' => 'datetime',
+        'age' => 'integer',
+        'payment_amount' => 'integer',
+        'paid_at' => 'datetime',
     ];
 
     public function table(): BelongsTo

@@ -12,7 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->unique();
-            $table->string('email')->nullable();
+            $table->string('email');
+            $table->integer('age');
             $table->foreignId('table_id')->constrained('tables')->onDelete('cascade');
             $table->string('doorprize_number')->unique()->nullable();
             $table->timestamp('registered_at');
