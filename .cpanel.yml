@@ -1,0 +1,5 @@
+----
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/kedaipar/repositories/eventpariban1
+    - cp -R out/. $DEPLOYPATH
