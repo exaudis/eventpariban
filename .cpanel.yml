@@ -4,7 +4,6 @@ deployment:
     - export REPOPATH=/home/kedaipar/repositories/eventpariban1
     - export DEPLOYPATH=/home/kedaipar/public_html
     - cd "$REPOPATH" && composer install --no-dev --prefer-dist --optimize-autoloader
-    - cd "$REPOPATH" && npm ci && npm run build
     - cd "$REPOPATH" && php artisan migrate --force
     - /bin/cp -R "$REPOPATH/public/." "$DEPLOYPATH/"
     - /bin/cp "$REPOPATH/cpanel/index.php" "$DEPLOYPATH/index.php"
