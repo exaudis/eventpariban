@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Participant;
-use App\Models\Table;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,9 +13,7 @@ class ParticipantController extends Controller
     public function index(Request $request): Response
     {
         $search = $request->query('search');
-        $tableFilter = $request->query('table');
-
-        $query = Participant::with('table');
+        $query = Participant::query();
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -24,12 +21,6 @@ class ParticipantController extends Controller
                   ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('doorprize_number', 'like', "%{$search}%");
-            });
-        }
-
-        if ($tableFilter) {
-            $query->whereHas('table', function ($q) use ($tableFilter) {
-                $q->where('table_number', $tableFilter);
             });
         }
 
@@ -43,21 +34,16 @@ class ParticipantController extends Controller
                     'phone' => $p->phone,
                     'email' => $p->email,
                     'age' => $p->age,
-                    'table' => $p->table ? $p->table->table_number : '-',
                     'doorprize_number' => $p->doorprize_number ?? '-',
                     'registered_at' => $p->registered_at ? $p->registered_at->format('d/m/Y H:i') : '-',
                 ];
             });
 
-        $tables = Table::orderBy('table_number')->get(['id', 'table_number']);
-
         return Inertia::render('Admin/Participants', [
             'participants' => $participants,
             'filters' => [
                 'search' => $search ?? '',
-                'table' => $tableFilter ?? '',
             ],
-            'tables' => $tables,
         ]);
     }
 }

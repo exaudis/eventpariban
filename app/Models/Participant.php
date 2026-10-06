@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Participant extends Model
@@ -13,7 +12,6 @@ class Participant extends Model
         'phone',
         'email',
         'age',
-        'table_id',
         'doorprize_number',
         'registered_at',
         'payment_token',
@@ -31,11 +29,6 @@ class Participant extends Model
         'payment_amount' => 'integer',
         'paid_at' => 'datetime',
     ];
-
-    public function table(): BelongsTo
-    {
-        return $this->belongsTo(Table::class);
-    }
 
     public function doorprizeNumber(): HasOne
     {

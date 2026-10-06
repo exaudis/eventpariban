@@ -21,9 +21,9 @@ export default function Login({ status }) {
             <div className="w-full max-w-sm bg-surface border border-eventborder rounded-xl p-6 sm:p-8 shadow-sm">
                 <div className="text-center mb-6 pb-4 border-b border-eventborder">
                     <img
-                        src="/images/logo.jpg"
+                        src="/images/logo-marpariban.png"
                         alt="Marpariban Entertainment Logo"
-                        className="w-16 h-16 rounded-full mx-auto mb-3 border-2 border-primary/40 object-cover shadow-sm"
+                        className="w-48 h-auto mx-auto mb-3 object-contain"
                     />
                     <div className="inline-block px-3 py-1 bg-primary-light text-primary-dark text-xs font-semibold tracking-wider uppercase rounded-md mb-2">
                         MARPARIBAN ENTERTAINMENT

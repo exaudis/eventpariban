@@ -9,7 +9,7 @@ class DoorprizeNumberSeeder extends Seeder
 {
     public function run(): void
     {
-        for ($i = 1; $i <= 200; $i++) {
+        for ($i = 1; $i <= 500; $i++) {
             $numberStr = str_pad($i, 3, '0', STR_PAD_LEFT);
             DoorprizeNumber::firstOrCreate(
                 ['number' => $numberStr],

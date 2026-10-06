@@ -2,13 +2,11 @@ import React from 'react';
 import { Head, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 
-export default function Participants({ participants, filters, tables }) {
+export default function Participants({ participants, filters }) {
     const handleSearch = (e) => {
         e.preventDefault();
         const search = e.target.search.value;
-        const table = e.target.table.value;
-
-        router.get('/admin/participants', { search, table }, { preserveState: true });
+        router.get('/admin/participants', { search }, { preserveState: true });
     };
 
     return (
@@ -26,27 +24,6 @@ export default function Participants({ participants, filters, tables }) {
                             placeholder="Cari nama, email, atau nomor WhatsApp..."
                             className="w-full px-3.5 py-2 bg-surface border border-eventborder rounded-lg text-sm text-bodytext focus:ring-1 focus:ring-primary focus:border-primary"
                         />
-                    </div>
-
-                    <div className="w-full md:w-48">
-                        <select
-                            name="table"
-                            defaultValue={filters.table}
-                            onChange={(e) => {
-                                router.get('/admin/participants', {
-                                    search: filters.search,
-                                    table: e.target.value
-                                }, { preserveState: true });
-                            }}
-                            className="w-full px-3.5 py-2 bg-surface border border-eventborder rounded-lg text-sm text-bodytext focus:ring-1 focus:ring-primary focus:border-primary"
-                        >
-                            <option value="">-- Semua Meja --</option>
-                            {tables.map((t) => (
-                                <option key={t.id} value={t.table_number}>
-                                    Meja {t.table_number}
-                                </option>
-                            ))}
-                        </select>
                     </div>
 
                     <button
@@ -69,7 +46,6 @@ export default function Participants({ participants, filters, tables }) {
                                 <th className="py-2.5 px-4">No. WhatsApp</th>
                                 <th className="py-2.5 px-4">Email</th>
                                 <th className="py-2.5 px-4 text-center">Umur</th>
-                                <th className="py-2.5 px-4 text-center">Meja</th>
                                 <th className="py-2.5 px-4 text-center">Nomor Doorprize</th>
                                 <th className="py-2.5 px-4 text-right">Waktu Registrasi</th>
                             </tr>
@@ -77,7 +53,7 @@ export default function Participants({ participants, filters, tables }) {
                         <tbody className="divide-y divide-eventborder">
                             {participants.data.length === 0 ? (
                                 <tr>
-                                    <td colSpan="8" className="py-8 text-center text-secondary text-sm">
+                                    <td colSpan="7" className="py-8 text-center text-secondary text-sm">
                                         Data peserta tidak ditemukan.
                                     </td>
                                 </tr>
@@ -91,11 +67,6 @@ export default function Participants({ participants, filters, tables }) {
                                         <td className="py-3 px-4 font-mono text-xs">{item.phone}</td>
                                         <td className="py-3 px-4 text-secondary text-xs">{item.email}</td>
                                         <td className="py-3 px-4 text-center font-medium text-dark">{item.age} Thn</td>
-                                        <td className="py-3 px-4 text-center">
-                                            <span className="inline-block px-2 py-0.5 bg-eventbg border border-eventborder rounded text-xs font-medium">
-                                                Meja {item.table}
-                                            </span>
-                                        </td>
                                         <td className="py-3 px-4 text-center font-mono font-bold text-primary text-base">
                                             {item.doorprize_number}
                                         </td>

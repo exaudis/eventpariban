@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
-use App\Models\Table;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -12,31 +11,17 @@ use Inertia\Response;
 
 class RegistrationController extends Controller
 {
-    public function landing(Request $request): Response
+    public function landing(): Response
     {
-        $tableNumber = $request->query('table', '01');
-        return Inertia::render('Public/Landing', ['tableNumber' => $tableNumber]);
+        return Inertia::render('Public/Landing');
     }
 
     /**
      * Show registration form page.
      */
-    public function create(Request $request): Response
+    public function create(): Response
     {
-        $tableParam = $request->query('table', '01');
-        $formattedTableNumber = str_pad((string)$tableParam, 2, '0', STR_PAD_LEFT);
-
-        $table = Table::where('table_number', $formattedTableNumber)
-            ->orWhere('table_number', (string)$tableParam)
-            ->first();
-
-        if (!$table) {
-            $table = Table::first();
-        }
-
-        return Inertia::render('Public/Register', [
-            'tableNumber' => $table ? $table->table_number : '01',
-        ]);
+        return Inertia::render('Public/Register');
     }
 
     /**
@@ -49,7 +34,6 @@ class RegistrationController extends Controller
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
             'age' => ['required', 'integer', 'min:1', 'max:120'],
-            'table_number' => ['required', 'string'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'phone.required' => 'Nomor WhatsApp wajib diisi.',
@@ -70,13 +54,6 @@ class RegistrationController extends Controller
             return back()->withErrors(['phone' => 'Nomor WhatsApp ini sudah terdaftar dan tidak dapat digunakan kembali.']);
         }
 
-        $formattedTableNumber = str_pad((string)$validated['table_number'], 2, '0', STR_PAD_LEFT);
-        $table = Table::where('table_number', $formattedTableNumber)
-            ->orWhere('table_number', $validated['table_number'])
-            ->first();
-
-        $tableId = $table ? $table->id : 1;
-
         try {
             $result = Participant::create([
                     'payment_token' => (string) Str::uuid(),
@@ -84,7 +61,6 @@ class RegistrationController extends Controller
                     'phone' => $cleanPhone,
                     'email' => trim($validated['email']),
                     'age' => (int)$validated['age'],
-                    'table_id' => $tableId,
                     'doorprize_number' => null,
                     'registered_at' => now(),
                 ]);

@@ -19,9 +19,9 @@ export default function RegistrationSuccess({ result }) {
             <div className="w-full max-w-md bg-surface border border-eventborder rounded-xl p-6 sm:p-8 text-center shadow-sm">
                 {/* Logo */}
                 <img
-                    src="/images/logo.jpg"
+                    src="/images/logo-marpariban.png"
                     alt="Marpariban Entertainment Logo"
-                    className="w-16 h-16 rounded-full mx-auto mb-3 border-2 border-primary/40 object-cover shadow-sm"
+                    className="w-48 h-auto mx-auto mb-3 object-contain"
                 />
 
                 {/* Status notice if already registered */}

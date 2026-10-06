@@ -71,7 +71,6 @@ export default function Dashboard({ stats, recentRegistrations }) {
                             <thead>
                                 <tr className="border-b border-eventborder bg-eventbg/50 text-xs font-semibold uppercase tracking-wider text-secondary">
                                     <th className="py-2.5 px-4">Nama</th>
-                                    <th className="py-2.5 px-4 text-center">Meja</th>
                                     <th className="py-2.5 px-4 text-center">Nomor Doorprize</th>
                                     <th className="py-2.5 px-4 text-right">Waktu</th>
                                 </tr>
@@ -80,11 +79,6 @@ export default function Dashboard({ stats, recentRegistrations }) {
                                 {recentRegistrations.map((item) => (
                                     <tr key={item.id} className="hover:bg-eventbg/30 transition-colors">
                                         <td className="py-3 px-4 font-medium text-dark">{item.name}</td>
-                                        <td className="py-3 px-4 text-center">
-                                            <span className="inline-block px-2.5 py-0.5 bg-eventbg border border-eventborder rounded text-xs font-semibold text-dark">
-                                                Meja {item.table}
-                                            </span>
-                                        </td>
                                         <td className="py-3 px-4 text-center font-mono font-bold text-primary text-base">
                                             {item.number || (item.payment_status === 'paid' ? '—' : 'Belum lunas')}
                                         </td>

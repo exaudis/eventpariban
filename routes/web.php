@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PrizeController;
 use App\Http\Controllers\Admin\NumberController;
-use App\Http\Controllers\Admin\QrCodeController;
 use App\Http\Controllers\Admin\WinnerController;
 use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -50,5 +49,4 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
     Route::post('/draw', [DrawController::class, 'draw'])->name('draw.process');
     Route::post('/draw/confirm', [DrawController::class, 'confirm'])->name('draw.confirm');
     Route::get('/winners', [WinnerController::class, 'index'])->name('winners');
-    Route::get('/qrcodes', [QrCodeController::class, 'index'])->name('qrcodes');
 });

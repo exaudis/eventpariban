@@ -41,6 +41,6 @@ class NumberController extends Controller
             Participant::query()->delete();
             DoorprizeNumber::query()->update(['status' => 'available', 'assigned_to' => null, 'assigned_at' => null]);
         });
-        return back()->with('success', 'Data peserta, pembayaran, dan pemenang telah direset. Daftar hadiah, meja, dan nomor undian tetap tersedia.');
+        return back()->with('success', 'Data peserta, pembayaran, dan pemenang telah direset. Daftar hadiah dan nomor undian tetap tersedia.');
     }
 }

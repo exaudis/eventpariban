@@ -1,13 +1,12 @@
 import React from 'react';
 import { useForm, Head } from '@inertiajs/react';
 
-export default function Register({ tableNumber }) {
+export default function Register() {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         phone: '',
         email: '',
         age: '',
-        table_number: tableNumber || '01',
     });
 
     const handleSubmit = (e) => {
@@ -35,11 +34,6 @@ export default function Register({ tableNumber }) {
                     </h1>
                     <p className="text-sm text-secondary mt-1">Isi data diri untuk melanjutkan pembayaran HTM Rp35.000.</p>
 
-                    {/* Table Badge */}
-                    <div className="mt-4 inline-flex items-center gap-1.5 px-4 py-1.5 bg-eventbg border border-eventborder rounded-full text-sm font-medium text-dark">
-                        <span>Meja</span>
-                        <span className="font-bold text-primary">{tableNumber}</span>
-                    </div>
                 </div>
 
                 {/* Data tersimpan lebih dulu; nomor undian baru diberikan setelah lunas. */}

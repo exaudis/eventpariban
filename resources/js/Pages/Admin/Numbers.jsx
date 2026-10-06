@@ -7,7 +7,7 @@ export default function Numbers({ numbers, stats }) {
     const { props } = usePage();
     const submit = e => { e.preventDefault(); form.post('/admin/numbers', { onSuccess: () => form.reset() }); };
     const reset = () => {
-        const typed = window.prompt('Reset akan menghapus semua pendaftaran, status pembayaran, dan pemenang; hadiah, meja, serta nomor undian tetap tersimpan. Ketik RESET untuk melanjutkan.');
+        const typed = window.prompt('Reset akan menghapus semua pendaftaran, status pembayaran, dan pemenang; hadiah serta 500 nomor undian tetap tersimpan. Ketik RESET untuk melanjutkan.');
         if (typed === 'RESET') router.post('/admin/reset');
     };
     return <AdminLayout title="Kelola Nomor Undian"><Head title="Nomor Undian" />

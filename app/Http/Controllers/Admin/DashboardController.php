@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $totalWinners = Winner::count();
         $pendingPayments = Participant::whereIn('payment_status', ['awaiting_payment', 'pending', 'rejected'])->count();
 
-        $recentRegistrations = Participant::with('table')
+        $recentRegistrations = Participant::query()
             ->orderBy('registered_at', 'desc')
             ->take(10)
             ->get()
@@ -28,7 +28,6 @@ class DashboardController extends Controller
                 return [
                     'id' => $p->id,
                     'name' => $p->name,
-                    'table' => $p->table ? $p->table->table_number : '-',
                     'number' => $p->doorprize_number,
                     'payment_status' => $p->payment_status,
                     'time' => $p->registered_at ? $p->registered_at->format('H:i') : '-',

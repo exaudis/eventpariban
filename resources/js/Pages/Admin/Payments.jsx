@@ -34,7 +34,7 @@ export default function Payments({ participants }) {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                         <h3 className="text-lg font-bold text-dark">{p.name}</h3>
-                        <p className="text-sm text-secondary">{p.phone} · {p.email} · Meja {p.table}</p>
+                        <p className="text-sm text-secondary">{p.phone} · {p.email}</p>
                         <p className="mt-2 text-sm"><b>{money(p.amount)}</b> · {p.status === 'awaiting_payment' ? 'Belum memilih metode pembayaran' : `${p.method === 'qris' ? 'QRIS' : 'Bayar di tempat'} · ${p.status === 'pending' ? 'Menunggu verifikasi' : 'Ditolak'}`}</p>
                         <p className="mt-1 text-xs text-secondary">Daftar {p.registered_at}</p>
                         {p.proof_url ? <a href={p.proof_url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-primary underline">Buka bukti pembayaran</a> : p.method === 'onsite' && <p className="mt-3 text-sm text-amber-700">Konfirmasi pembayaran langsung dari peserta.</p>}

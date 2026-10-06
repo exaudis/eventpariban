@@ -14,11 +14,11 @@ class PaymentController extends Controller
 {
     public function index(): Response
     {
-        $participants = Participant::with('table')->whereIn('payment_status', ['awaiting_payment', 'pending', 'rejected'])
+        $participants = Participant::whereIn('payment_status', ['awaiting_payment', 'pending', 'rejected'])
             ->orderByRaw("CASE WHEN payment_status = 'pending' THEN 0 ELSE 1 END")
             ->orderByDesc('registered_at')->get()->map(fn ($p) => [
                 'id' => $p->id, 'name' => $p->name, 'phone' => $p->phone, 'email' => $p->email,
-                'table' => $p->table?->table_number ?? '-', 'method' => $p->payment_method,
+                'method' => $p->payment_method,
                 'status' => $p->payment_status, 'amount' => $p->payment_amount,
                 'proof_url' => $p->payment_proof_data ? route('admin.payments.proof', $p) : null,
                 'registered_at' => $p->registered_at?->format('d/m/Y H:i'),

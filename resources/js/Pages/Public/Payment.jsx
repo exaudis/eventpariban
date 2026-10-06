@@ -31,7 +31,7 @@ export default function Payment({ participant }) {
         <main className="min-h-screen bg-eventbg flex items-center justify-center px-4 py-8">
             <Head title="Pembayaran — Marpariban Entertainment" />
             <section className="w-full max-w-md rounded-2xl border border-eventborder bg-surface p-6 shadow-lg sm:p-8">
-                <img src="/images/logo.jpg" alt="Marpariban Entertainment" className="mx-auto mb-4 h-14 w-14 rounded-full object-cover" />
+                <img src="/images/logo-marpariban.png" alt="Marpariban Entertainment" className="mx-auto mb-4 h-20 w-auto object-contain" />
                 <p className="text-center text-xs font-bold uppercase tracking-widest text-primary">Pendaftaran Dalle Pariban</p>
                 <h1 className="mt-1 text-center text-2xl font-extrabold text-dark">Pembayaran HTM</h1>
                 <p className="mt-2 text-center text-secondary">Halo, {participant.name}. HTM acara adalah</p>

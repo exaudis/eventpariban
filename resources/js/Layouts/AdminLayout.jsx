@@ -12,7 +12,6 @@ export default function AdminLayout({ children, title }) {
         { name: 'Nomor Undian', href: '/admin/numbers', active: url.startsWith('/admin/numbers') },
         { name: 'Pengundian', href: '/admin/draw', active: url.startsWith('/admin/draw') },
         { name: 'Pemenang', href: '/admin/winners', active: url.startsWith('/admin/winners') },
-        { name: 'QR Codes', href: '/admin/qrcodes', active: url.startsWith('/admin/qrcodes') },
     ];
 
     return (
@@ -21,9 +20,9 @@ export default function AdminLayout({ children, title }) {
             <aside className="w-full md:w-64 bg-dark text-surface flex-shrink-0">
                 <div className="p-6 border-b border-white/10 flex items-center gap-3">
                     <img
-                        src="/images/logo.jpg"
+                        src="/images/logo-marpariban.png"
                         alt="Logo"
-                        className="w-10 h-10 rounded-full border border-primary/40 object-cover"
+                        className="h-12 w-16 object-contain"
                     />
                     <div>
                         <span className="text-[10px] font-semibold uppercase tracking-widest text-primary font-mono block">
