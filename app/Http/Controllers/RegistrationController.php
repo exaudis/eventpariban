@@ -121,11 +121,11 @@ class RegistrationController extends Controller
 
         $validated = $request->validate([
             'payment_method' => ['required', 'in:qris,onsite'],
-            'payment_proof' => ['required_if:payment_method,qris', 'nullable', 'image', 'max:2048'],
+            'payment_proof' => ['required_if:payment_method,qris', 'nullable', 'image', 'max:20480'],
         ], [
             'payment_proof.required_if' => 'Unggah bukti pembayaran QRIS.',
             'payment_proof.image' => 'Bukti pembayaran harus berupa gambar.',
-            'payment_proof.max' => 'Ukuran bukti pembayaran maksimal 2 MB.',
+            'payment_proof.max' => 'Ukuran bukti pembayaran maksimal 20 MB.',
         ]);
 
         $proofFile = $validated['payment_method'] === 'qris' ? $request->file('payment_proof') : null;

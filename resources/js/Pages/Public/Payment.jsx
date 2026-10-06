@@ -65,7 +65,7 @@ export default function Payment({ participant }) {
                         {method === 'qris' && <div className="rounded-xl border border-eventborder bg-white p-3 text-center">
                             <p className="mb-2 text-sm font-semibold text-dark">Pindai QRIS dan bayar tepat Rp35.000</p>
                             <a href="/images/event/qris-pariban.jpeg" target="_blank" rel="noreferrer"><img src="/images/event/qris-pariban.jpeg" alt="QRIS Show of Batak, Hiburan" className="mx-auto max-h-[360px] w-auto rounded-lg" /></a>
-                            <p className="mt-2 text-xs text-secondary">Unggah tangkapan layar atau foto bukti pembayaran di bawah.</p>
+                            <p className="mt-2 text-xs text-secondary">Unggah tangkapan layar atau foto bukti pembayaran (maksimal 20 MB).</p>
                             <input type="file" accept="image/*" onChange={(e) => setData('payment_proof', e.target.files?.[0] || null)} className="mt-3 block w-full text-sm" />
                             {errors.payment_proof && <p className="mt-1 text-left text-xs text-red-600">{errors.payment_proof}</p>}
                         </div>}
