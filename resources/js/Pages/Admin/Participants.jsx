@@ -1,8 +1,10 @@
 import React from 'react';
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function Participants({ participants, filters }) {
+    const { props } = usePage();
+
     const handleSearch = (e) => {
         e.preventDefault();
         const search = e.target.search.value;
@@ -12,6 +14,8 @@ export default function Participants({ participants, filters }) {
     return (
         <AdminLayout title="Data Peserta">
             <Head title="Data Peserta" />
+
+            {props.flash?.success && <p className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-800">{props.flash.success}</p>}
 
             {/* Filter & Search Bar */}
             <div className="bg-surface border border-eventborder rounded-xl p-4 mb-6">
@@ -48,12 +52,13 @@ export default function Participants({ participants, filters }) {
                                 <th className="py-2.5 px-4 text-center">Umur</th>
                                 <th className="py-2.5 px-4 text-center">Nomor Doorprize</th>
                                 <th className="py-2.5 px-4 text-right">Waktu Registrasi</th>
+                                <th className="py-2.5 px-4 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-eventborder">
                             {participants.data.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" className="py-8 text-center text-secondary text-sm">
+                                    <td colSpan="8" className="py-8 text-center text-secondary text-sm">
                                         Data peserta tidak ditemukan.
                                     </td>
                                 </tr>
@@ -71,6 +76,19 @@ export default function Participants({ participants, filters }) {
                                             {item.doorprize_number}
                                         </td>
                                         <td className="py-3 px-4 text-right text-xs text-secondary">{item.registered_at}</td>
+                                        <td className="py-3 px-4 text-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const numberText = item.doorprize_number !== '-' ? ` Nomor ${item.doorprize_number} akan kembali tersedia.` : '';
+                                                    const confirmed = window.confirm(`Hapus peserta ${item.name}? Data pendaftaran, pembayaran, dan riwayat pemenangnya akan dihapus.${numberText}`);
+                                                    if (confirmed) router.delete(`/admin/participants/${item.id}`, { preserveScroll: true });
+                                                }}
+                                                className="text-xs font-bold text-red-700 hover:text-red-900"
+                                            >
+                                                Hapus peserta
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))
                             )}

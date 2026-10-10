@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DoorprizeNumber;
 use App\Models\Participant;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -45,5 +48,41 @@ class ParticipantController extends Controller
                 'search' => $search ?? '',
             ],
         ]);
+    }
+
+    public function destroy(Participant $participant): RedirectResponse
+    {
+        $name = $participant->name;
+
+        DB::transaction(function () use ($participant) {
+            $lockedParticipant = Participant::query()
+                ->whereKey($participant->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $numbers = DoorprizeNumber::query()
+                ->where(function ($query) use ($lockedParticipant) {
+                    $query->where('assigned_to', $lockedParticipant->id);
+
+                    if ($lockedParticipant->doorprize_number) {
+                        $query->orWhere('number', $lockedParticipant->doorprize_number);
+                    }
+                })
+                ->lockForUpdate()
+                ->get();
+
+            foreach ($numbers as $number) {
+                $number->update([
+                    'status' => 'available',
+                    'assigned_to' => null,
+                    'assigned_at' => null,
+                ]);
+            }
+
+            // Winner rows are removed by the participant foreign-key cascade.
+            $lockedParticipant->delete();
+        });
+
+        return back()->with('success', "Peserta {$name} berhasil dihapus. Nomor undiannya kembali tersedia.");
     }
 }
