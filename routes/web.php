@@ -33,6 +33,7 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants');
+    Route::get('/participants/export', [ParticipantController::class, 'export'])->name('participants.export');
     Route::delete('/participants/{participant}', [ParticipantController::class, 'destroy'])->name('participants.destroy');
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
     Route::get('/payments/{participant}/proof', [PaymentController::class, 'proof'])->name('payments.proof');

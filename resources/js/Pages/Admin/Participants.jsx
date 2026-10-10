@@ -19,7 +19,8 @@ export default function Participants({ participants, filters }) {
 
             {/* Filter & Search Bar */}
             <div className="bg-surface border border-eventborder rounded-xl p-4 mb-6">
-                <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-3">
+                <div className="flex flex-col md:flex-row gap-3">
+                <form onSubmit={handleSearch} className="flex flex-1 flex-col md:flex-row gap-3">
                     <div className="flex-1">
                         <input
                             type="text"
@@ -37,6 +38,13 @@ export default function Participants({ participants, filters }) {
                         Cari
                     </button>
                 </form>
+                    <a
+                        href="/admin/participants/export"
+                        className="inline-flex items-center justify-center py-2 px-5 bg-primary hover:bg-primary-hover text-surface text-sm font-semibold rounded-lg transition-colors"
+                    >
+                        Ekspor Excel (.xlsx)
+                    </a>
+                </div>
             </div>
 
             {/* Table */}
